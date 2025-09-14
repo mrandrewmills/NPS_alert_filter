@@ -50,8 +50,7 @@ The script saves the JSON data as `nps-alerts.json` in the current working direc
 ## 🛠 Tips
 
 - You can pipe the output to a file using `>` or `Out-File`
-- Add keyword filters like `"closure"`, `"fire"`, `"construction"`, etc.
-- Extend the script to export results to CSV or JSON
+- Put quotes around multiple-word filters like `"black bears"`, `"forest fire"`, etc.
 
 ## 📄 License
 

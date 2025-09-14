@@ -27,7 +27,8 @@ $url = "https://nps.gov/nps-alerts.json"
 $download = $false
 if (-not (Test-Path $jsonFile)) {
     $download = $true
-} else {
+}
+else {
     $fileDate = (Get-Item $jsonFile).LastWriteTime.Date
     $today = (Get-Date).Date
     if ($fileDate -lt $today) {
@@ -39,7 +40,8 @@ if ($download) {
     try {
         Write-Host "Downloading the latest alerts from $url..."
         Invoke-WebRequest -Uri $url -OutFile $jsonFile
-    } catch {
+    }
+    catch {
         Write-Error "Failed to download the alerts file. Please check your internet connection or the URL."
         exit 1
     }
@@ -48,7 +50,8 @@ if ($download) {
 # Load and parse the JSON file
 try {
     $alerts = Get-Content $jsonFile -Raw | ConvertFrom-Json
-} catch {
+}
+catch {
     Write-Error "Failed to parse the JSON file. The file might be corrupted or not in the expected format."
     exit 1
 }
@@ -61,24 +64,28 @@ $filteredAlerts = $alerts | Where-Object {
 
 # Display the filtered alerts
 if ($filteredAlerts.Count -eq 0) {
-    Write-Host "No alerts found for the keyword: $Keyword"
-} else {
+    "No alerts found for the keyword: $Keyword"
+}
+else {
     foreach ($alert in $filteredAlerts) {
-        Write-Host "----------------------------------------"
-        Write-Host "Title: $($alert.title)"
-        Write-Host "Description: $($alert.description)"
-        Write-Host "Category: $($alert.category)"
+        "----------------------------------------"
+        "Title: $($alert.title)"
+        "Description: $($alert.description)"
+        "Category: $($alert.category)"
+        "Park Name: $($alert.park_name)"
+        "Link: $($alert.internal_link)"
+        "ID: $($alert.unique_id)"
         # Assuming park and state information is nested
         if ($alert.parks.Count -gt 0) {
             $park = $alert.parks[0]
-            Write-Host "Park: $($park.fullName)"
-            Write-Host "State: $($park.states)"
+            "Park: $($park.fullName)"
+            "State: $($park.states)"
         }
         if ($alert.startDate) {
-            Write-Host "Start Date: $($alert.startDate)"
+            "Start Date: $($alert.startDate)"
         }
         if ($alert.endDate) {
-            Write-Host "End Date: $($alert.endDate)"
+            "End Date: $($alert.endDate)"
         }
     }
 }

@@ -4,7 +4,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-This PowerShell script filters **National Park Service (NPS) alerts** by a user-provided keyword, matching against alert titles and descriptions. It automatically downloads and caches the latest alert data from the [NPS alerts API](https://www.nps.gov/nps-alerts.json), refreshing it daily.
+This PowerShell script filters **National Park Service (NPS) alerts** by a user-provided keyword, matching against alert titles and descriptions. It automatically downloads and caches the latest alert data, refreshing it daily.
 
 ## 📌 Features
 

@@ -85,19 +85,15 @@ else {
         "Title: $($alert.title)"
         "Description: $($alert.description)"
         "Category: $($alert.category)"
-        "Park Name: $($alert.parkName)"
+        "Park: $($alert.parkCode)"
         "Link: $($alert.url)"
         "ID: $($alert.id)"
-        if ($alert.parks.Count -gt 0) {
-            $park = $alert.parks[0]
-            "Park: $($park.fullName)"
-            "State: $($park.states)"
-        }
         if ($alert.startDate) {
             "Start Date: $($alert.startDate)"
         }
         if ($alert.endDate) {
             "End Date: $($alert.endDate)"
         }
+        "Last Indexed Date: $($alert.lastIndexedDate)"
     }
 }

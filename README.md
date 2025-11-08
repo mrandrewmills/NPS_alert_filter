@@ -8,9 +8,10 @@ This PowerShell script filters **National Park Service (NPS) alerts** by a user-
 
 ## 📌 Features
 
-* 🔄 Downloads the latest alert data from the official NPS API (two calls: metadata + full data)
-* �� Caches data locally to avoid repeated downloads
+* 🔄 Downloads the latest alert data from the official NPS API
+* 💾 Caches data locally to avoid repeated downloads
 * 🔍 Case-insensitive keyword search in title and description
+* 🗂 Optionally filters by alert category for more precise results
 * 🏝 Displays alert details including park name, category, alert dates, and link
 * 🗽 Graceful error handling for connectivity and data issues
 * 🔑 API key is read from an environment variable `NPS_API_KEY` for security
@@ -30,8 +31,16 @@ $env:NPS_API_KEY = "YOUR_API_KEY"
 
 ## 🚀 Usage
 
+### Basic Usage
+To search for a keyword in the title or description:
 ```powershell
-.\AlertFilter.ps1 fire
+.\AlertFilter.ps1 "fire"
+```
+
+### Advanced Usage
+To filter by both a keyword and a specific category, use the optional `-Category` parameter:
+```powershell
+.\AlertFilter.ps1 "shutdown" -Category "Park Closure"
 ```
 
 ### Example Output
@@ -51,11 +60,12 @@ ID: 12345
 
 ## 🔧 Parameters
 
-| Name    | Required | Description                                                          |
-| ------- | -------- | -------------------------------------------------------------------- |
-| Keyword | ✅ Yes    | The keyword to search for in title or description (case-insensitive) |
+| Name     | Required | Description                                                               |
+| -------- | -------- | ------------------------------------------------------------------------- |
+| Keyword  | ✅ Yes    | The keyword to search for in the title or description (case-insensitive). |
+| Category | ❌ No     | The category to filter by (e.g., "Park Closure", "Caution"). Optional.    |
 
-## 📞 Local Caching
+## 💾 Local Caching
 
 * The script saves JSON data as `nps-alerts.json` in the current working directory.
 * Only re-downloads the file if it’s missing or older than today.

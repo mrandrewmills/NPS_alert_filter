@@ -10,12 +10,19 @@
 .PARAMETER Keyword
     The keyword to search for in the alert title and description. This parameter is mandatory.
 
+.PARAMETER Category
+    This optional parameter filters alerts by: "Caution", "Danger", "Information", or "Park Closure".
+
 #>
 [CmdletBinding()]
 param (
     [Parameter(Mandatory = $true, HelpMessage = "A topic parameter is needed to filter the alerts.")]
-    [string]$Keyword
+    [string]$Keyword,
+    [Parameter(Mandatory = $false, HelpMessage = "A category parameter can be used to further filter the alerts.")]
+    [string]$Category
 )
+
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $jsonFile = "nps-alerts.json"
 
@@ -73,6 +80,12 @@ else {
 $filteredAlerts = $alerts | Where-Object {
     ($_.title -and $_.title.ToLower().Contains($Keyword.ToLower())) -or
     ($_.description -and $_.description.ToLower().Contains($Keyword.ToLower()))
+}
+
+if ($PSBoundParameters.ContainsKey('Category')) {
+    $filteredAlerts = $filteredAlerts | Where-Object {
+        $_.category -and $_.category.ToLower() -eq $Category.ToLower()
+    }
 }
 
 # Display the filtered alerts

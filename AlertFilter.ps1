@@ -13,13 +13,18 @@
 .PARAMETER Category
     This optional parameter filters alerts by: "Caution", "Danger", "Information", or "Park Closure".
 
+.PARAMETER ParkCode
+    This optional parameter filters alerts by a specific park code.
+
 #>
 [CmdletBinding()]
 param (
     [Parameter(Mandatory = $true, HelpMessage = "A topic parameter is needed to filter the alerts.")]
     [string]$Keyword,
     [Parameter(Mandatory = $false, HelpMessage = "A category parameter can be used to further filter the alerts.")]
-    [string]$Category
+    [string]$Category,
+    [Parameter(Mandatory = $false, HelpMessage = "A park code parameter can be used to further filter the alerts.")]
+    [string]$ParkCode
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -85,6 +90,12 @@ $filteredAlerts = $alerts | Where-Object {
 if ($PSBoundParameters.ContainsKey('Category')) {
     $filteredAlerts = $filteredAlerts | Where-Object {
         $_.category -and $_.category.ToLower() -eq $Category.ToLower()
+    }
+}
+
+if ($PSBoundParameters.ContainsKey('ParkCode')) {
+    $filteredAlerts = $filteredAlerts | Where-Object {
+        $_.parkCode -and $_.parkCode.ToLower() -eq $ParkCode.ToLower()
     }
 }
 

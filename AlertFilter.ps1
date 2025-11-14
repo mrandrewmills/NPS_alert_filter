@@ -13,6 +13,9 @@
 .PARAMETER Category
     This optional parameter filters alerts by: "Caution", "Danger", "Information", or "Park Closure".
 
+.PARAMETER Format
+    Specifies the output format: console (default), json, or csv.
+
 .PARAMETER ParkCode
     This optional parameter filters alerts by a specific park code.
 
@@ -24,7 +27,10 @@ param (
     [Parameter(Mandatory = $false, HelpMessage = "A category parameter can be used to further filter the alerts.")]
     [string]$Category,
     [Parameter(Mandatory = $false, HelpMessage = "A park code parameter can be used to further filter the alerts.")]
-    [string]$ParkCode
+    [string]$ParkCode,
+    [Parameter(Mandatory = $false, HelpMessage = "Specify output format: console (default), json, or csv.")]
+    [ValidateSet('console', 'json', 'csv')]
+    [string]$Format = 'console'
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -97,6 +103,29 @@ if ($PSBoundParameters.ContainsKey('ParkCode')) {
     $filteredAlerts = $filteredAlerts | Where-Object {
         $_.parkCode -and $_.parkCode.ToLower() -eq $ParkCode.ToLower()
     }
+}
+
+# Handle export options
+switch ($Format) {
+    'json' {
+        # Output raw JSON to the console
+        $filteredAlerts | ConvertTo-Json -Depth 5
+        exit
+    }
+    'csv' {
+        # Convert to CSV text
+        $csv = $filteredAlerts | ConvertTo-Csv -NoTypeInformation
+
+        # Force UTF-8 for PowerShell 5.x
+        if ($PSVersionTable.PSVersion.Major -lt 6) {
+            [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+        }
+
+        # Output CSV text to console (so > redirection works)
+        $csv | ForEach-Object { $_ }
+        exit
+    }
+    default { } # fall through to console display
 }
 
 # Display the filtered alerts

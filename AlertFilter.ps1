@@ -113,16 +113,15 @@ switch ($Format) {
         exit
     }
     'csv' {
-        # Convert to CSV text
-        $csv = $filteredAlerts | ConvertTo-Csv -NoTypeInformation
+        # Convert the filtered objects to CSV text
+        $csvText = $filteredAlerts | ConvertTo-Csv -NoTypeInformation | Out-String
 
-        # Force UTF-8 for PowerShell 5.x
-        if ($PSVersionTable.PSVersion.Major -lt 6) {
-            [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-        }
+        # Prepend UTF-8 BOM
+        $bom = [System.Text.Encoding]::UTF8.GetString([byte[]](0xEF, 0xBB, 0xBF))
 
-        # Output CSV text to console (so > redirection works)
-        $csv | ForEach-Object { $_ }
+        # Output BOM + CSV text to STDOUT
+        Write-Output ($bom + $csvText)
+
         exit
     }
     default { } # fall through to console display

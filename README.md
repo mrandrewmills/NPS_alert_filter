@@ -13,6 +13,7 @@ This PowerShell script filters **National Park Service (NPS) alerts** by a user-
 - 🔍 Case-insensitive keyword search in title and description
 - 🗂 Optionally filters by alert category for more precise results
 - 🏝 Displays alert details including park name, category, alert dates, and link
+- 📤 Supports multiple output formats: `console`, `json`, and `csv`
 - 🗽 Graceful error handling for connectivity and data issues
 - 🔑 API key is read from an environment variable `NPS_API_KEY` for security
 
@@ -47,7 +48,25 @@ To filter by both a keyword and a specific category, use the optional `-Category
 .\AlertFilter.ps1 "shutdown" -Category "Park Closure"
 ```
 
-### Example Output
+To get the results in a different format, use the `-Format` parameter:
+
+```powershell
+.\AlertFilter.ps1 "construction" -Format "csv" > alerts.csv
+```
+
+## 📤 Output Formats
+
+The script supports three output formats, specified with the `-Format` parameter.
+
+### Console (Default)
+
+Displays results in a human-readable format in the console.
+
+```powershell
+.\AlertFilter.ps1 "road closure"
+```
+
+**Example Output:**
 
 ```
 ----------------------------------------
@@ -62,6 +81,44 @@ End Date: 2025-09-22
 ID: 12345
 ```
 
+### JSON
+
+Outputs the filtered alert objects as a JSON array. This is useful for programmatic use or integration with other tools.
+
+```powershell
+.\AlertFilter.ps1 "fire" -Format "json"
+```
+
+**Example Output:**
+
+```json
+[
+    {
+        "id": "12345",
+        "url": "https://www.nps.gov/olym/planyourvisit/road-closure.htm",
+        "title": "North Shore Road Construction July 9 - Sept 22, 2025",
+        "description": "A section of N Shore Rd near mile 10.2 is closed...",
+        "category": "Closure",
+        "parkCode": "olym"
+    }
+]
+```
+
+### CSV
+
+Outputs the results in CSV format, which can be easily imported into spreadsheets or other data analysis tools.
+
+```powershell
+.\AlertFilter.ps1 "construction" -Format "csv" > alerts.csv
+```
+
+**Example Output (in `alerts.csv`):**
+
+```csv
+"id","url","title","description","category","parkCode"
+"12345","https://www.nps.gov/olym/planyourvisit/road-closure.htm","North Shore Road Construction...","A section of N Shore Rd...","Closure","olym"
+```
+
 ## 🔧 Parameters
 
 | Name     | Required | Description                                                               |
@@ -69,6 +126,7 @@ ID: 12345
 | Keyword  | ✅ Yes   | The keyword to search for in the title or description (case-insensitive). |
 | Category | ❌ No    | The category to filter by (e.g., "Park Closure", "Caution"). Optional.    |
 | ParkCode | ❌ No    | The park code to filter by (e.g., "shen", "yell", "romo"). Optional.      |
+| Format   | ❌ No    | The output format: `console` (default), `json`, or `csv`. Optional.       |
 
 ## 💾 Local Caching
 
@@ -80,7 +138,6 @@ ID: 12345
 
 - Pipe output to a file using `>` or `Out-File`
 - Try keywords like `"closure"`, `"fire"`, `"construction"`, etc.
-- Can be extended to export results to CSV or JSON
 
 ## 📝 License
 

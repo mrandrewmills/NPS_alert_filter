@@ -19,6 +19,9 @@
 .PARAMETER ParkCode
     This optional parameter filters alerts by a specific park code.
 
+.PARAMETER Force
+    Forces a fresh download of alerts from the NPS API, bypassing the local cache.
+
 #>
 [CmdletBinding()]
 param (
@@ -30,7 +33,8 @@ param (
     [string]$ParkCode,
     [Parameter(Mandatory = $false, HelpMessage = "Specify output format: console (default), json, or csv.")]
     [ValidateSet('console', 'json', 'csv')]
-    [string]$Format = 'console'
+    [string]$Format = 'console',
+    [switch]$Force
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -55,6 +59,10 @@ else {
     if ($fileDate -lt $today) {
         $download = $true
     }
+}
+
+if ($Force) {
+        $download = $true
 }
 
 if ($download) {
